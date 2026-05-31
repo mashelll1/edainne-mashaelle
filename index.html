@@ -762,10 +762,13 @@
        CONTACT
     ═══════════════════════════════════════ */
 
-    // ── EmailJS config — fill these in after setting up emailjs.com ──
-    const EMAILJS_PUBLIC_KEY  = 'nqjR8iWFbxrVPQZWS';   // Account → Public Key
-    const EMAILJS_SERVICE_ID  = 'service_xo5vvt9';   // Email Services → Service ID
-    const EMAILJS_TEMPLATE_ID = 'template_myymrkl';  // Email Templates → Template ID
+    // ── EmailJS config ──
+    const EMAILJS_PUBLIC_KEY  = 'nqjR8iWFbxrVPQZWS';
+    const EMAILJS_SERVICE_ID  = 'service_xo5vvt9';
+    const EMAILJS_TEMPLATE_ID = 'template_myymrkl';
+
+    // Initialise once, as soon as the script runs
+    emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
 
     function Contact() {
       const [form, setForm] = useState({ name:'', email:'', message:'' });
@@ -800,12 +803,11 @@
         setError('');
 
         try {
-          emailjs.init(EMAILJS_PUBLIC_KEY);
           await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
             from_name:  form.name,
             from_email: form.email,
             message:    form.message,
-            to_email:   'mashaelleminton@gmail.com',
+            reply_to:   form.email,
           });
           setStatus('success');
           setForm({ name:'', email:'', message:'' });
