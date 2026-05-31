@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; }
     html { scroll-behavior: smooth; }
@@ -760,14 +761,72 @@
     /* ═══════════════════════════════════════
        CONTACT
     ═══════════════════════════════════════ */
+
+    // ── EmailJS config — fill these in after setting up emailjs.com ──
+    const EMAILJS_PUBLIC_KEY  = 'nqjR8iWFbxrVPQZWS';   // Account → Public Key
+    const EMAILJS_SERVICE_ID  = 'service_xo5vvt9';   // Email Services → Service ID
+    const EMAILJS_TEMPLATE_ID = 'template_myymrkl';  // Email Templates → Template ID
+
     function Contact() {
+      const [form, setForm] = useState({ name:'', email:'', message:'' });
+      const [status, setStatus] = useState('idle'); // idle | sending | success | error
+      const [error, setError] = useState('');
+
       const contacts = [
-        { icon:'✉', label:'Email', value:'mashaelleminton@email.com', href:'mailto:mashaelleminton@email.com' },
+        { icon:'✉', label:'Email', value:'mashaelleminton@gmail.com', href:'mailto:mashaelleminton@gmail.com' },
         { icon:'🔗', label:'LinkedIn', value:'linkedin.com/in/edainne-mashaelle-minton', href:'https://www.linkedin.com/in/edainne-mashaelle-minton-ab6106412/' },
         { icon:'🐙', label:'GitHub', value:'github.com/mashelll1', href:'https://github.com/mashelll1' },
         { icon:'📞', label:'Phone', value:'+63 946 885 9741', href:'tel:+639468859741' },
         { icon:'📍', label:'Location', value:'Valenzuela City, Philippines', href:null },
       ];
+
+      const handleChange = (e) => {
+        setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
+        if (status === 'error') setStatus('idle');
+      };
+
+      const validate = () => {
+        if (!form.name.trim()) return 'Please enter your name.';
+        if (!form.email.trim() || !/\S+@\S+\.\S+/.test(form.email)) return 'Please enter a valid email.';
+        if (!form.message.trim()) return 'Please enter a message.';
+        return null;
+      };
+
+      const handleSubmit = async () => {
+        const err = validate();
+        if (err) { setError(err); setStatus('error'); return; }
+
+        setStatus('sending');
+        setError('');
+
+        try {
+          emailjs.init(EMAILJS_PUBLIC_KEY);
+          await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+            from_name:  form.name,
+            from_email: form.email,
+            message:    form.message,
+            to_email:   'mashaelleminton@gmail.com',
+          });
+          setStatus('success');
+          setForm({ name:'', email:'', message:'' });
+        } catch (e) {
+          console.error('EmailJS error:', e);
+          setError('Something went wrong. Please try again or email me directly.');
+          setStatus('error');
+        }
+      };
+
+      const inputStyle = {
+        background:'transparent',
+        border:'1px solid rgba(56,189,248,0.2)',
+        borderRadius:'0.65rem',
+        padding:'0.65rem 0.9rem',
+        color:'#e0f2fe',
+        fontFamily:'"DM Sans",sans-serif',
+        fontSize:'0.85rem',
+        width:'100%',
+      };
+
       return (
         <section id="contact" className="section-alt" style={{padding:'4rem 1.25rem'}}>
           <div style={{maxWidth:'1280px',margin:'0 auto'}}>
@@ -789,16 +848,62 @@
                   "Let's build something beautiful together."
                 </p>
                 <p style={{fontFamily:'"DM Sans",sans-serif',color:'rgba(224,242,254,0.45)',fontSize:'0.85rem',lineHeight:1.75,marginBottom:'2rem',maxWidth:'380px'}}>
-                  Thank you for taking the time to explore my portfolio. If you'd like to collaborate, discuss opportunities, or simply connect, feel free to reach out.
+                  Whether you have a project in mind, a collaboration idea, or just want to say hi — my inbox is always open. I'll get back to you within 24 hours.
                 </p>
+
                 <div className="glass" style={{borderRadius:'1rem',padding:'1.25rem',display:'flex',flexDirection:'column',gap:'0.75rem'}}>
                   <p style={{fontFamily:'"Cormorant Garamond",serif',color:'#e0f2fe',fontSize:'1.3rem',fontWeight:300,marginBottom:'0.1rem'}}>Send a Message</p>
-                  <input type="text" placeholder="Your Name" style={{background:'transparent',border:'1px solid rgba(56,189,248,0.2)',borderRadius:'0.65rem',padding:'0.65rem 0.9rem',color:'#e0f2fe',fontFamily:'"DM Sans",sans-serif',fontSize:'0.85rem',width:'100%'}}/>
-                  <input type="email" placeholder="Your Email" style={{background:'transparent',border:'1px solid rgba(56,189,248,0.2)',borderRadius:'0.65rem',padding:'0.65rem 0.9rem',color:'#e0f2fe',fontFamily:'"DM Sans",sans-serif',fontSize:'0.85rem',width:'100%'}}/>
-                  <textarea placeholder="Your Message..." rows={4} style={{background:'transparent',border:'1px solid rgba(56,189,248,0.2)',borderRadius:'0.65rem',padding:'0.65rem 0.9rem',color:'#e0f2fe',fontFamily:'"DM Sans",sans-serif',fontSize:'0.85rem',width:'100%',resize:'none'}}/>
-                  <button className="glass-btn" style={{alignSelf:'flex-start',fontSize:'0.75rem',fontFamily:'"DM Sans",sans-serif',fontWeight:500,textTransform:'uppercase',letterSpacing:'0.12em',padding:'0.6rem 1.3rem',borderRadius:'0.65rem',color:'#38bdf8',background:'rgba(14,165,233,0.15)',borderColor:'rgba(56,189,248,0.4)'}}>
-                    Send Message →
-                  </button>
+
+                  {/* Success state */}
+                  {status === 'success' ? (
+                    <div style={{textAlign:'center',padding:'1.5rem 0.5rem',display:'flex',flexDirection:'column',alignItems:'center',gap:'0.75rem'}}>
+                      <div style={{width:'48px',height:'48px',borderRadius:'50%',background:'rgba(14,165,233,0.15)',border:'1px solid rgba(56,189,248,0.4)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'1.4rem'}}>✓</div>
+                      <p style={{color:'#38bdf8',fontFamily:'"DM Sans",sans-serif',fontSize:'0.9rem',fontWeight:500}}>Message sent!</p>
+                      <p style={{color:'rgba(224,242,254,0.55)',fontFamily:'"DM Sans",sans-serif',fontSize:'0.8rem',lineHeight:1.6}}>Thanks for reaching out. I'll get back to you within 24 hours.</p>
+                      <button className="glass-btn" onClick={() => setStatus('idle')}
+                        style={{fontSize:'0.72rem',fontFamily:'"DM Sans",sans-serif',fontWeight:500,textTransform:'uppercase',letterSpacing:'0.12em',padding:'0.5rem 1.1rem',borderRadius:'0.65rem',color:'#38bdf8',marginTop:'0.25rem'}}>
+                        Send Another →
+                      </button>
+                    </div>
+                  ) : (
+                    <>
+                      <input
+                        type="text" name="name" placeholder="Your Name"
+                        value={form.name} onChange={handleChange}
+                        style={inputStyle}/>
+                      <input
+                        type="email" name="email" placeholder="Your Email"
+                        value={form.email} onChange={handleChange}
+                        style={inputStyle}/>
+                      <textarea
+                        name="message" placeholder="Your Message..." rows={4}
+                        value={form.message} onChange={handleChange}
+                        style={{...inputStyle, resize:'none'}}/>
+
+                      {/* Error message */}
+                      {status === 'error' && (
+                        <p style={{color:'#f87171',fontFamily:'"DM Sans",sans-serif',fontSize:'0.78rem',lineHeight:1.5}}>
+                          ⚠ {error}
+                        </p>
+                      )}
+
+                      <button
+                        className="glass-btn"
+                        onClick={handleSubmit}
+                        disabled={status === 'sending'}
+                        style={{
+                          alignSelf:'flex-start',fontSize:'0.75rem',fontFamily:'"DM Sans",sans-serif',
+                          fontWeight:500,textTransform:'uppercase',letterSpacing:'0.12em',
+                          padding:'0.6rem 1.3rem',borderRadius:'0.65rem',
+                          color: status === 'sending' ? 'rgba(56,189,248,0.5)' : '#38bdf8',
+                          background:'rgba(14,165,233,0.15)',borderColor:'rgba(56,189,248,0.4)',
+                          cursor: status === 'sending' ? 'not-allowed' : 'pointer',
+                          opacity: status === 'sending' ? 0.7 : 1,
+                        }}>
+                        {status === 'sending' ? 'Sending…' : 'Send Message →'}
+                      </button>
+                    </>
+                  )}
                 </div>
               </div>
 
@@ -814,12 +919,12 @@
                       </div>
                     </div>
                   );
-                  const style = {border:'1px solid rgba(56,189,248,0.15)',borderRadius:'0.875rem',padding:'0.875rem',display:'block',transition:'border-color 0.3s',textDecoration:'none'};
+                  const cardStyle = {border:'1px solid rgba(56,189,248,0.15)',borderRadius:'0.875rem',padding:'0.875rem',display:'block',transition:'border-color 0.3s',textDecoration:'none'};
                   return c.href ? (
                     <a key={c.label} href={c.href} target={c.href.startsWith('http')?'_blank':undefined} rel="noreferrer"
-                      className="glass" style={style}>{inner}</a>
+                      className="glass" style={cardStyle}>{inner}</a>
                   ) : (
-                    <div key={c.label} className="glass" style={style}>{inner}</div>
+                    <div key={c.label} className="glass" style={cardStyle}>{inner}</div>
                   );
                 })}
               </div>
@@ -845,7 +950,7 @@
                 style={{fontSize:'0.7rem',fontFamily:'"DM Sans",sans-serif',fontWeight:500,textTransform:'uppercase',letterSpacing:'0.12em',padding:'0.5rem 1.1rem',borderRadius:'9999px',color:'#38bdf8',background:'rgba(14,165,233,0.12)',borderColor:'rgba(56,189,248,0.3)'}}>
                 ↓ Download CV
               </button>
-              <span style={{color:'rgba(224,242,254,0.2)',fontSize:'0.68rem',fontFamily:'"DM Sans",sans-serif'}}>Let's go!</span>
+              <span style={{color:'rgba(224,242,254,0.2)',fontSize:'0.68rem',fontFamily:'"DM Sans",sans-serif'}}>Made with ♥ in PH</span>
             </div>
           </div>
         </footer>
