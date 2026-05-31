@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Edainne Mashaelle Minton — Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; }
+    html { scroll-behavior: smooth; }
+
+    /* ── Theme variables ── */
+    :root {
+      --bg-primary: #020818;
+      --bg-alt: rgba(4,15,46,0.6);
+      --text-primary: #e0f2fe;
+      --text-muted: rgba(224,242,254,0.65);
+      --text-faint: rgba(224,242,254,0.45);
+      --accent: #38bdf8;
+      --glass-bg: rgba(14,165,233,0.07);
+      --glass-border: rgba(56,189,248,0.18);
+      --glass-btn-bg: rgba(14,165,233,0.12);
+      --glass-btn-border: rgba(56,189,248,0.3);
+      --nav-bg: rgba(2,8,24,0.85);
+      --scrollbar-track: #020818;
+      --mesh1: rgba(7,21,64,0.9);
+      --mesh2: rgba(2,36,112,0.5);
+      --mesh3: rgba(2,8,24,1);
+    }
+
+    body.light-mode {
+      --bg-primary: #f0f6ff;
+      --bg-alt: rgba(219,234,254,0.5);
+      --text-primary: #0c1a3a;
+      --text-muted: rgba(12,26,58,0.7);
+      --text-faint: rgba(12,26,58,0.5);
+      --accent: #0369a1;
+      --glass-bg: rgba(14,165,233,0.08);
+      --glass-border: rgba(3,105,161,0.22);
+      --glass-btn-bg: rgba(14,165,233,0.1);
+      --glass-btn-border: rgba(3,105,161,0.35);
+      --nav-bg: rgba(240,246,255,0.92);
+      --scrollbar-track: #f0f6ff;
+      --mesh1: rgba(186,230,253,0.9);
+      --mesh2: rgba(147,197,253,0.5);
+      --mesh3: rgba(240,246,255,1);
+    }
+
+    body { background:var(--bg-primary); font-family:'DM Sans',sans-serif; overflow-x:hidden; color:var(--text-primary); transition:background 0.4s ease,color 0.4s ease; }
+
+    .glass { background:var(--glass-bg); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border:1px solid var(--glass-border); }
+    .glass-btn { background:var(--glass-btn-bg); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border:1px solid var(--glass-btn-border); cursor:pointer; transition:all 0.3s ease; color:var(--text-primary); }
+    .glass-btn:hover { background:rgba(14,165,233,0.25); border-color:var(--accent); box-shadow:0 0 20px rgba(14,165,233,0.3),inset 0 1px 0 rgba(255,255,255,0.1); transform:translateY(-1px); }
+    .glass-btn:active { transform:translateY(0); }
+
+    .glass-nav { background:var(--nav-bg); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border-bottom:1px solid var(--glass-border); }
+
+    .mesh-bg {
+      background:
+        radial-gradient(ellipse 80% 50% at 20% 20%, var(--mesh1) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 60% at 80% 80%, var(--mesh2) 0%, transparent 60%),
+        radial-gradient(ellipse 100% 80% at 50% 50%, var(--mesh3) 40%, transparent 100%),
+        var(--bg-primary);
+    }
+    .section-alt { background:var(--bg-alt); }
+
+    .glow-line { height:1px; background:linear-gradient(90deg,transparent,var(--accent),transparent); opacity:0.6; }
+
+    .scroll-reveal { opacity:0; transform:translateY(36px); transition:opacity 0.8s ease,transform 0.8s ease; }
+    .scroll-reveal.visible { opacity:1; transform:translateY(0); }
+
+    .project-card { transition:all 0.4s cubic-bezier(0.4,0,0.2,1); }
+    .project-card:hover { transform:translateY(-5px); box-shadow:0 24px 64px rgba(14,165,233,0.15); }
+    .project-card .hover-hint { opacity:0; transition:opacity 0.3s; }
+    .project-card:hover .hover-hint { opacity:1; }
+    .project-card .img-zoom { transition:transform 0.7s ease; }
+    .project-card:hover .img-zoom { transform:scale(1.08); }
+
+    .cred-overlay { opacity:0; transition:opacity 0.3s; }
+    .cred-card:hover .cred-overlay { opacity:1; }
+    .cred-card .img-zoom { transition:transform 0.5s ease; }
+    .cred-card:hover .img-zoom { transform:scale(1.05); }
+    .cred-card { transition:all 0.4s ease; }
+    .cred-card:hover { box-shadow:0 20px 50px rgba(14,165,233,0.15); }
+
+    .modal-bg { background:rgba(2,8,24,0.88); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); }
+    body.light-mode .modal-bg { background:rgba(240,246,255,0.88); }
+
+    ::-webkit-scrollbar { width:4px; }
+    ::-webkit-scrollbar-track { background:var(--scrollbar-track); }
+    ::-webkit-scrollbar-thumb { background:rgba(14,165,233,0.4); border-radius:2px; }
+
+    .dot { transition:width 0.3s ease,background 0.3s ease; }
+
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    /* ── Avatar float/breathe animation ── */
+    @keyframes avatarFloat {
+      0%,100% { transform:translateY(0px) scale(1); }
+      50% { transform:translateY(-14px) scale(1.015); }
+    }
+    .avatar-float {
+      animation: avatarFloat 4s ease-in-out infinite;
+    }
+    .avatar-glow-float {
+      animation: avatarFloat 4s ease-in-out infinite;
+      animation-delay: 0.1s;
+    }
+
+    /* ── Theme toggle button ── */
+    .theme-toggle {
+      width:38px; height:38px; border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      transition:all 0.3s ease; flex-shrink:0;
+    }
+    .theme-toggle:hover { transform:rotate(20deg) scale(1.1); }
+    .theme-toggle svg { transition:all 0.4s ease; }
+
+    input:focus, textarea:focus { border-color:var(--accent)!important; outline:none; }
+
+    /* ── Light mode comprehensive overrides ── */
+    /* Global catch-all: force ALL text dark in light mode */
+    body.light-mode * { color:#0c1a3a !important; }
+
+    /* Then restore specific accent colours */
+    body.light-mode .accent,
+    body.light-mode [style*="color:#38bdf8"],
+    body.light-mode [style*="color: #38bdf8"],
+    body.light-mode p[style*="color:#38bdf8"],
+    body.light-mode span[style*="color:#38bdf8"] { color:#0369a1 !important; }
+
+    /* Headings & brand */
+    body.light-mode .brand-name,
+    body.light-mode h1,
+    body.light-mode h2,
+    body.light-mode h3 { color:#0c1a3a !important; }
+
+    /* Accent-coloured labels (categories, tags, section eyebrows) */
+    body.light-mode [style*="color:#38bdf8"],
+    body.light-mode [style*="color: #38bdf8"] { color:#0369a1 !important; }
+
+    /* Primary text (#e0f2fe) → deep navy */
+    body.light-mode [style*="color:#e0f2fe"],
+    body.light-mode [style*="color: #e0f2fe"] { color:#0c1a3a !important; }
+
+    /* Bio / description paragraph text — all rgba(224,242,254,...) variants */
+    body.light-mode p.bio,
+    body.light-mode [style*="rgba(224,242,254,0.7)"],
+    body.light-mode [style*="rgba(224,242,254,0.65)"],
+    body.light-mode [style*="rgba(224,242,254,0.5)"],
+    body.light-mode [style*="rgba(224,242,254,0.45)"],
+    body.light-mode [style*="rgba(224,242,254,0.4)"],
+    body.light-mode [style*="rgba(224,242,254,0.35)"],
+    body.light-mode [style*="rgba(224,242,254,0.25)"],
+    body.light-mode [style*="rgba(224,242,254,0.2)"] { color:#1e3a5f !important; }
+
+    /* Slightly dimmer for truly faint/secondary text */
+    body.light-mode [style*="rgba(224,242,254,0.35)"],
+    body.light-mode [style*="rgba(224,242,254,0.25)"],
+    body.light-mode [style*="rgba(224,242,254,0.2)"] { color:rgba(12,26,58,0.45) !important; }
+
+    /* Footer copyright tiny text */
+    body.light-mode footer p { color:rgba(12,26,58,0.5) !important; }
+
+    /* Inputs & textareas */
+    body.light-mode input,
+    body.light-mode textarea { color:#0c1a3a !important; background:rgba(255,255,255,0.5) !important; border-color:rgba(3,105,161,0.25) !important; }
+    body.light-mode input::placeholder,
+    body.light-mode textarea::placeholder { color:rgba(12,26,58,0.4) !important; }
+
+    /* Typing cursor */
+    body.light-mode [style*="background:#38bdf8"] { background:#0369a1 !important; }
+
+    /* Tech tag hashes and small labels */
+    body.light-mode span[style*="color:rgba(224,242,254,0.4)"] { color:rgba(12,26,58,0.5) !important; }
+
+    /* Project/cred year badge */
+    body.light-mode .glass span[style*="#38bdf8"] { color:#0369a1 !important; }
+
+    /* Card backgrounds in light mode — slightly whiter */
+    body.light-mode .project-card.glass,
+    body.light-mode .cred-card.glass { background:rgba(255,255,255,0.45) !important; }
+
+    /* Section label uppercase text */
+    body.light-mode p[style*="color:#38bdf8"] { color:#0369a1 !important; }
+
+    /* Bio & italic quote text */
+    body.light-mode p[style*="fontStyle:'italic'"],
+    body.light-mode p[style*="font-style:italic"],
+    body.light-mode p[style*="fontStyle"] { color:rgba(12,26,58,0.7) !important; }
+
+    /* Buttons with accent color text */
+    body.light-mode button[style*="color:#38bdf8"],
+    body.light-mode a[style*="color:#38bdf8"] { color:#0369a1 !important; }
+
+    /* Glow line accent */
+    body.light-mode .glow-line { opacity:0.5; }
+
+    /* Contact card text */
+    body.light-mode .contact-cards p,
+    body.light-mode .contact-cards a { color:#0c1a3a !important; }
+
+    /* Social icon buttons */
+    body.light-mode a.glass-btn[style*="#38bdf8"] { color:#0369a1 !important; }
+
+    /* Modal overlay */
+    body.light-mode .modal-bg { background:rgba(220,232,255,0.92) !important; }
+    body.light-mode .modal-bg .glass { background:rgba(245,250,255,0.95) !important; }
+
+    /* ── Responsive modal layout ── */
+    .modal-inner { display:flex; flex-direction:column; flex:1; overflow:hidden; }
+    .modal-left { padding:1.25rem; overflow-y:auto; border-bottom:1px solid var(--glass-border); }
+    .modal-right { flex:1; min-height:0; padding:1rem; display:flex; flex-direction:column; gap:0.5rem; overflow:hidden; }
+
+    @media(min-width:640px) {
+      .modal-inner { flex-direction:row; }
+      .modal-left { width:42%; flex-shrink:0; padding:1.75rem; border-bottom:none; border-right:1px solid var(--glass-border); overflow-y:auto; }
+      .modal-right { padding:1.5rem; }
+    }
+
+    /* ── Contact cards responsive ── */
+    .contact-cards { display:grid; grid-template-columns:1fr; gap:0.75rem; }
+    @media(min-width:400px) { .contact-cards { grid-template-columns:1fr 1fr; } }
+
+    /* ── Project grid ── */
+    .projects-grid { display:grid; grid-template-columns:1fr; gap:1.25rem; }
+    @media(min-width:480px) { .projects-grid { grid-template-columns:1fr 1fr; } }
+    @media(min-width:1024px) { .projects-grid { grid-template-columns:repeat(4,1fr); } }
+
+    /* ── Cred grid ── */
+    .creds-grid { display:grid; grid-template-columns:1fr; gap:1.25rem; }
+    @media(min-width:480px) { .creds-grid { grid-template-columns:1fr 1fr; } }
+    @media(min-width:1024px) { .creds-grid { grid-template-columns:repeat(4,1fr); } }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+    /* ═══════════════════════════════════════
+       HEADER
+    ═══════════════════════════════════════ */
+    function Header({ darkMode, toggleDark }) {
+      const [scrolled, setScrolled] = useState(false);
+      const [menuOpen, setMenuOpen] = useState(false);
+      useEffect(() => {
+        const fn = () => setScrolled(window.scrollY > 40);
+        window.addEventListener('scroll', fn);
+        return () => window.removeEventListener('scroll', fn);
+      }, []);
+      const scrollTo = (id) => {
+        document.getElementById(id.toLowerCase())?.scrollIntoView({ behavior:'smooth' });
+        setMenuOpen(false);
+      };
+      const navLinks = ['About','Projects','Credentials','Contact'];
+
+      const ThemeIcon = () => darkMode ? (
+        /* Sun icon for dark mode (click to go light) */
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="5"/>
+          <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+      ) : (
+        /* Moon icon for light mode (click to go dark) */
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      );
+
+      return (
+        <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? 'glass-nav py-3' : 'py-4'}`}>
+          <style>{`
+            .header-inner {
+              max-width:1280px; margin:0 auto; padding:0 1.25rem;
+              display:flex; align-items:center; justify-content:space-between; gap:0.5rem;
+            }
+            .brand-btn { background:none; border:none; cursor:pointer; padding:0; min-width:0; flex:1; }
+            .brand-name {
+              font-family:'Playfair Display',serif;
+              color:var(--text-primary); font-size:1.35rem; font-weight:400;
+              letter-spacing:0.05em; line-height:1;
+              text-align:left; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+            }
+            @media(min-width:480px) { .brand-name { font-size:1.5rem; } }
+            @media(min-width:768px) { .brand-name { font-size:1.75rem; } }
+            .desk-nav { display:none !important; }
+            .mob-controls { display:flex; align-items:center; gap:0.4rem; flex-shrink:0; }
+            @media(min-width:768px) {
+              .brand-btn { flex:unset; }
+              .desk-nav { display:flex !important; align-items:center; gap:0.4rem; }
+              .mob-controls { display:none !important; }
+            }
+          `}</style>
+
+          <div className="header-inner">
+            {/* Brand */}
+            <button className="brand-btn" onClick={() => window.scrollTo({top:0,behavior:'smooth'})}>
+              <div className="brand-name">Edainne Mashaelle</div>
+            </button>
+
+            {/* Desktop nav */}
+            <nav className="desk-nav">
+              {navLinks.map(link => (
+                <button key={link} onClick={() => scrollTo(link)}
+                  className="glass-btn"
+                  style={{fontFamily:'"DM Sans",sans-serif',fontWeight:500,fontSize:'0.72rem',textTransform:'uppercase',letterSpacing:'0.1em',padding:'0.45rem 1rem',borderRadius:'9999px'}}>
+                  {link}
+                </button>
+              ))}
+              <button onClick={() => window.open('assets/minton_cv.pdf','_blank')}
+                className="glass-btn"
+                style={{fontFamily:'"DM Sans",sans-serif',fontWeight:500,fontSize:'0.72rem',textTransform:'uppercase',letterSpacing:'0.1em',padding:'0.45rem 1.1rem',borderRadius:'9999px',marginLeft:'0.5rem',color:'var(--accent)',background:'rgba(14,165,233,0.18)',borderColor:'var(--accent)'}}>
+                ↓ CV
+              </button>
+              {/* Theme toggle — desktop */}
+              <button onClick={toggleDark} className="glass-btn theme-toggle" title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+                style={{marginLeft:'0.25rem',color:'var(--accent)'}}>
+                <ThemeIcon/>
+              </button>
+            </nav>
+
+            {/* Mobile right side: theme toggle + burger */}
+            <div className="mob-controls">
+              {/* Theme toggle — mobile */}
+              <button onClick={toggleDark} className="glass-btn theme-toggle" title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+                style={{width:'36px',height:'36px',padding:0,color:'var(--accent)'}}>
+                <ThemeIcon/>
+              </button>
+              {/* Hamburger */}
+              <button className="glass-btn"
+                style={{padding:'0.5rem 0.6rem',borderRadius:'0.6rem',flexDirection:'column',gap:'4px',display:'flex'}}
+                onClick={() => setMenuOpen(!menuOpen)}>
+                <span style={{display:'block',width:'18px',height:'2px',background:'var(--text-primary)',borderRadius:'1px'}}/>
+                <span style={{display:'block',width:'18px',height:'2px',background:'var(--text-primary)',borderRadius:'1px'}}/>
+                <span style={{display:'block',width:'18px',height:'2px',background:'var(--text-primary)',borderRadius:'1px'}}/>
+              </button>
+            </div>
+          </div>
+
+          {/* Mobile dropdown */}
+          {menuOpen && (
+            <div className="glass" style={{margin:'0.5rem 1rem 0',borderRadius:'1rem',padding:'0.875rem',display:'flex',flexDirection:'column',gap:'0.5rem'}}>
+              {navLinks.map(link => (
+                <button key={link} onClick={() => scrollTo(link)}
+                  className="glass-btn"
+                  style={{fontFamily:'"DM Sans",sans-serif',fontWeight:500,fontSize:'0.8rem',textTransform:'uppercase',letterSpacing:'0.1em',padding:'0.7rem 1rem',borderRadius:'0.75rem',textAlign:'left'}}>
+                  {link}
+                </button>
+              ))}
+              <button onClick={() => { window.open('assets/minton_cv.pdf','_blank'); setMenuOpen(false); }}
+                className="glass-btn"
+                style={{fontFamily:'"DM Sans",sans-serif',fontWeight:500,fontSize:'0.8rem',textTransform:'uppercase',letterSpacing:'0.1em',padding:'0.7rem 1rem',borderRadius:'0.75rem',textAlign:'left',color:'var(--accent)',background:'rgba(14,165,233,0.18)',borderColor:'var(--accent)'}}>
+                ↓ Download CV
+              </button>
+            </div>
+          )}
+        </header>
+      );
+    }
+
+    /* ═══════════════════════════════════════
+       ABOUT
+    ═══════════════════════════════════════ */
+    function About() {
+      const roles = ['UI/UX Design','Frontend Developer','Networking'];
+      const [roleIdx, setRoleIdx] = useState(0);
+      const [displayed, setDisplayed] = useState('');
+      const [typing, setTyping] = useState(true);
+
+      useEffect(() => {
+        const current = roles[roleIdx];
+        let t;
+        if (typing) {
+          if (displayed.length < current.length) {
+            t = setTimeout(() => setDisplayed(current.slice(0, displayed.length + 1)), 80);
+          } else {
+            t = setTimeout(() => setTyping(false), 1400);
+          }
+        } else {
+          if (displayed.length > 0) {
+            t = setTimeout(() => setDisplayed(displayed.slice(0, -1)), 45);
+          } else {
+            setRoleIdx((roleIdx + 1) % roles.length);
+            setTyping(true);
+          }
+        }
+        return () => clearTimeout(t);
+      }, [displayed, typing, roleIdx]);
+
+      return (
+        <section id="about" className="mesh-bg" style={{minHeight:'100vh',display:'flex',alignItems:'center',paddingTop:'5rem',paddingBottom:'3rem',paddingLeft:'1.25rem',paddingRight:'1.25rem'}}>
+          <div style={{maxWidth:'1280px',margin:'0 auto',width:'100%'}}>
+            <div className="glow-line" style={{width:'10rem',marginBottom:'2.5rem'}}/>
+
+            {/* Responsive grid — mobile: col, avatar first; tablet+: side by side */}
+            <div style={{display:'grid',gap:'2.5rem',alignItems:'center'}}
+              className="about-grid">
+              <style>{`
+                .about-grid{grid-template-columns:1fr;grid-template-rows:auto auto;}
+                .about-avatar-wrap{order:-1;}
+                .about-text { text-align:center; }
+                .about-text .glow-line { margin-left:auto; margin-right:auto; }
+                .about-text p.bio { margin-left:auto; margin-right:auto; }
+                .about-typing { justify-content:center; }
+                @media(min-width:768px){
+                  .about-grid{grid-template-columns:1fr 1fr;grid-template-rows:unset;}
+                  .about-avatar-wrap{order:unset;}
+                  .about-text { text-align:left; }
+                  .about-text .glow-line { margin-left:0; margin-right:0; }
+                  .about-text p.bio { margin-left:0; margin-right:0; }
+                  .about-typing { justify-content:flex-start; }
+                }
+              `}</style>
+
+              {/* Text */}
+              <div className="scroll-reveal about-text">
+                <p style={{color:'#38bdf8',fontFamily:'"DM Sans",sans-serif',fontSize:'0.7rem',textTransform:'uppercase',letterSpacing:'0.3em',marginBottom:'0.75rem'}}>
+                  Hello, I'm
+                </p>
+                <h1 style={{fontFamily:'"Cormorant Garamond",serif',fontSize:'clamp(2rem,7vw,4.2rem)',lineHeight:1.05,color:'#e0f2fe',fontWeight:300,marginBottom:'0.1rem'}}>
+                  Edainne Mashaelle
+                </h1>
+                <h1 style={{fontFamily:'"Cormorant Garamond",serif',fontSize:'clamp(2rem,7vw,4.2rem)',lineHeight:1.05,color:'#e0f2fe',fontWeight:300,marginBottom:'1.1rem'}}>
+                  Minton
+                </h1>
+
+                {/* Typing */}
+                <div className="about-typing" style={{height:'1.75rem',marginBottom:'1.25rem',display:'flex',alignItems:'center'}}>
+                  <span style={{color:'#38bdf8',fontFamily:'"DM Sans",sans-serif',fontSize:'0.85rem',fontWeight:500,letterSpacing:'0.08em'}}>{displayed}</span>
+                  <span style={{display:'inline-block',width:'2px',height:'0.9rem',background:'#38bdf8',marginLeft:'2px',animation:'blink 1s step-end infinite'}}/>
+                </div>
+
+                <div className="glow-line" style={{width:'5rem',marginBottom:'1.5rem'}}/>
+
+                <p className="bio" style={{fontFamily:'"DM Sans",sans-serif',color:'rgba(224,242,254,0.7)',fontSize:'0.9rem',lineHeight:1.8,maxWidth:'440px'}}>
+                  A BSIT student at Pamantasan ng Lungsod ng Valenzuela working at the intersection of frontend development, QA testing, and networking. From building interfaces and testing code to configuring networks, I focus on delivering secure, high-quality tech solutions.
+                </p>
+
+                {/* Social icons */}
+                <div className="about-typing" style={{display:'flex',gap:'0.75rem',marginTop:'1.5rem',flexWrap:'wrap'}}>
+                  {[
+                    { label:'Facebook', href:'https://www.facebook.com/edainne.mashaelle1', svg:<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg> },
+                    { label:'GitHub',   href:'https://github.com/mashelll1',svg:<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg> },
+                    { label:'Instagram',href:'https://www.instagram.com/e.mshll/',svg:<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg> },
+                    { label:'LinkedIn',  href:'https://www.linkedin.com/in/edainne-mashaelle-minton-ab6106412/',svg:<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg> },
+                  ].map(s => (
+                    <a key={s.label} href={s.href} target="_blank" rel="noreferrer" title={s.label}
+                      className="glass-btn"
+                      style={{width:'40px',height:'40px',borderRadius:'50%',display:'flex',alignItems:'center',justifyContent:'center',color:'#38bdf8',flexShrink:0,textDecoration:'none'}}>
+                      {s.svg}
+                    </a>
+                  ))}
+                </div>
+              </div>
+
+              {/* Avatar — bigger */}
+              <div className="scroll-reveal about-avatar-wrap"
+                style={{display:'flex',justifyContent:'center',alignItems:'center',position:'relative',transitionDelay:'0.2s'}}>
+                <div className="avatar-glow-float" style={{position:'absolute',width:'clamp(17rem,48vw,24rem)',height:'clamp(17rem,48vw,24rem)',borderRadius:'9999px',background:'radial-gradient(circle,rgba(14,165,233,0.15) 0%,transparent 70%)'}}/>
+                <div className="avatar-float" style={{position:'relative',width:'clamp(15rem,44vw,22rem)',height:'clamp(15rem,44vw,22rem)',borderRadius:'9999px',border:'2px solid rgba(56,189,248,0.3)',overflow:'hidden',boxShadow:'0 0 40px rgba(14,165,233,0.12)'}}>
+                  <img src="assets/id ko.png" alt="Edainne Mashaelle Minton"
+                    style={{width:'100%',height:'100%',objectFit:'cover',objectPosition:'center top',display:'block'}}/>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    /* ═══════════════════════════════════════
+       PROJECTS
+    ═══════════════════════════════════════ */
+    const PROJECTS = [
+      { id:1, title:'Lost in the Archipelago', category:'Game Development', year:'2023',
+        description:'A Java-based game set in the Philippine archipelago, featuring exploration mechanics, narrative choices, and hand-crafted level design that immerses players in local culture and geography.',
+        tech:['Java'], images:['assets/arch.jpg','assets/arch1.png','assets/arch2.png'], link:null },
+      { id:2, title:'Wish by Lilah S. Website', category:'Web Development', year:'2025',
+        description:'A visually stunning and intuitive web application designed for resort accommodation and booking. It delivers a premium user experience, allowing guests to effortlessly browse luxury stays, view exclusive offers, and book reservations online.',
+        tech:['HTML','CSS','JavaScript','MS SQL'], images:['assets/wish.png'], link:null },
+      { id:3, title:'ERC System', category:'Web Development', year:'2026',
+        description:'A specialized research management and ethics compliance platform designed for the College of Engineering and Information Technology at Pamantasan ng Lungsod ng Valenzuela. ResearchConnect+ streamlines the academic workflow by automating research submissions, providing real-time compliance tracking, and fostering seamless collaboration between students, faculty advisers, coordinators, and chairpersons.',
+        tech:['React','Node.js','Vercel'], images:['assets/erc.png'], link:'https://erc-system.vercel.app/login' },
+      { id:4, title:'SatisTrack', category:'Web Development', year:'2026',
+        description:'SatisTrack is a web-based satisfaction tracking platform designed to help teams monitor and improve user experience metrics over time.',
+        tech:['React','Tailwind CSS','Vercel'], images:['assets/satistrack.png'], link:'https://erc-system.vercel.app/login' },
+      { id:5, title:'Book Cover Mockup', category:'Multimedia', year:'2025',
+        description:'A creative visual design project exploring composition, color theory, and typographic principles to deliver a compelling and cohesive aesthetic outcome.',
+        tech:['Photoshop'], images:['assets/work1.png'], link:null },
+      { id:6, title:'Typography Portrait', category:'Multimedia', year:'2025',
+        description:'A design-forward project that balances aesthetics with function, translating complex concepts into clear, engaging visual communication.',
+        tech:['Photoshop'], images:['assets/work4.jpg'], link:null },
+      { id:7, title:'Product Advertisement Poster', category:'Multimedia', year:'2025',
+        description:'An experimental visual project combining bold typography with striking imagery for maximum visual impact and audience engagement.',
+        tech:['Photoshop'], images:['assets/work2.png'], link:null },
+      { id:8, title:'Grunge Poster', category:'Multimedia', year:'2025',
+        description:'A refined portfolio piece showcasing meticulous attention to detail in spatial composition, color harmony, typographic rhythm, and visual balance.',
+        tech:['Photoshop'], images:['assets/work3.png'], link:null },
+    ];
+
+    function ProjectCard({ project, onClick }) {
+      return (
+        <div className="project-card glass" onClick={() => onClick(project)}
+          style={{borderRadius:'1rem',overflow:'hidden',cursor:'pointer',border:'1px solid rgba(56,189,248,0.15)'}}>
+          <div style={{position:'relative',height:'180px',overflow:'hidden'}}>
+            <img src={project.images[0]} alt={project.title}
+              className="img-zoom" style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
+            <div style={{position:'absolute',inset:0,background:'linear-gradient(to top,rgba(2,8,24,0.85) 0%,transparent 55%)'}}/>
+            <div style={{position:'absolute',top:'0.6rem',right:'0.6rem'}}>
+              <span className="glass" style={{color:'#38bdf8',fontSize:'0.6rem',fontFamily:'"DM Sans",sans-serif',textTransform:'uppercase',letterSpacing:'0.15em',padding:'0.15rem 0.6rem',borderRadius:'9999px'}}>{project.year}</span>
+            </div>
+            <div className="hover-hint" style={{position:'absolute',inset:0,display:'flex',alignItems:'center',justifyContent:'center'}}>
+              <span className="glass" style={{color:'#e0f2fe',fontSize:'0.75rem',fontFamily:'"DM Sans",sans-serif',padding:'0.35rem 1rem',borderRadius:'9999px'}}>View Project →</span>
+            </div>
+          </div>
+          <div style={{padding:'1rem 1.1rem'}}>
+            <p style={{color:'#38bdf8',fontSize:'0.6rem',fontFamily:'"DM Sans",sans-serif',textTransform:'uppercase',letterSpacing:'0.2em',marginBottom:'0.25rem'}}>{project.category}</p>
+            <h3 style={{fontFamily:'"Cormorant Garamond",serif',color:'#e0f2fe',fontSize:'1.2rem',fontWeight:300,marginBottom:'0.5rem',lineHeight:1.3}}>{project.title}</h3>
+            <div style={{display:'flex',flexWrap:'wrap',gap:'0.4rem'}}>
+              {project.tech.map(t => (
+                <span key={t} style={{color:'rgba(224,242,254,0.4)',fontSize:'0.65rem',fontFamily:'"DM Sans",sans-serif'}}>#{t}</span>
+              ))}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    function ProjectModal({ project, onClose }) {
+      const [idx, setIdx] = useState(0);
+      useEffect(() => { setIdx(0); }, [project]);
+      if (!project) return null;
+      return (
+        <div className="modal-bg" style={{position:'fixed',inset:0,zIndex:50,display:'flex',alignItems:'center',justifyContent:'center',padding:'0.75rem',overflowY:'auto'}}
+          onClick={onClose}>
+          <div className="glass" style={{
+            borderRadius:'1.25rem',
+            width:'100%',maxWidth:'900px',
+            height:'auto',maxHeight:'90vh',
+            overflow:'hidden',
+            border:'1px solid rgba(56,189,248,0.22)',
+            display:'flex',flexDirection:'column',
+          }} onClick={e => e.stopPropagation()}>
+
+            <div className="modal-inner">
+              {/* Left — info */}
+              <div className="modal-left" style={{justifyContent:'space-between',display:'flex',flexDirection:'column'}}>
+                <div>
+                  <p style={{color:'#38bdf8',fontSize:'0.6rem',fontFamily:'"DM Sans",sans-serif',textTransform:'uppercase',letterSpacing:'0.25em',marginBottom:'0.35rem'}}>{project.category}</p>
+                  <h2 style={{fontFamily:'"Cormorant Garamond",serif',color:'#e0f2fe',fontSize:'clamp(1.4rem,3vw,2rem)',fontWeight:300,marginBottom:'0.2rem',lineHeight:1.2}}>{project.title}</h2>
+                  <p style={{color:'rgba(224,242,254,0.35)',fontSize:'0.75rem',fontFamily:'"DM Sans",sans-serif',marginBottom:'1rem'}}>{project.year}</p>
+                  <div className="glow-line" style={{width:'3rem',marginBottom:'1rem'}}/>
+                  <p style={{color:'rgba(224,242,254,0.65)',fontFamily:'"DM Sans",sans-serif',fontSize:'0.82rem',lineHeight:1.75,marginBottom:'1rem'}}>{project.description}</p>
+                  <div style={{display:'flex',flexWrap:'wrap',gap:'0.4rem',marginBottom:'1.25rem'}}>
+                    {project.tech.map(t => (
+                      <span key={t} className="glass" style={{color:'#38bdf8',fontSize:'0.6rem',fontFamily:'"DM Sans",sans-serif',textTransform:'uppercase',letterSpacing:'0.1em',padding:'0.25rem 0.65rem',borderRadius:'9999px'}}>{t}</span>
+                    ))}
+                  </div>
+                </div>
+                <div style={{display:'flex',gap:'0.6rem',flexWrap:'wrap',paddingTop:'0.5rem'}}>
+                  {project.link ? (
+                    <a href={project.link} target="_blank" rel="noreferrer" className="glass-btn"
+                      style={{fontSize:'0.75rem',fontFamily:'"DM Sans",sans-serif',padding:'0.55rem 1.1rem',borderRadius:'0.65rem',textDecoration:'none',display:'inline-flex',alignItems:'center',gap:'0.3rem',color:'#38bdf8',borderColor:'rgba(56,189,248,0.45)'}}>
+                      Live Preview →
+                    </a>
+                  ) : (
+                    <div style={{fontSize:'0.75rem',fontFamily:'"DM Sans",sans-serif',padding:'0.55rem 1.1rem',borderRadius:'0.65rem',display:'inline-flex',alignItems:'center',gap:'0.4rem',background:'rgba(255,255,255,0.04)',border:'1px solid rgba(255,255,255,0.1)',color:'rgba(224,242,254,0.3)',cursor:'not-allowed',userSelect:'none'}}>
+                      🔒 Not Deployed
+                    </div>
+                  )}
+                  <button className="glass-btn" onClick={onClose}
+                    style={{fontSize:'0.75rem',fontFamily:'"DM Sans",sans-serif',padding:'0.55rem 1.1rem',borderRadius:'0.65rem',color:'rgba(224,242,254,0.5)'}}>
+                    Close ✕
+                  </button>
+                </div>
+              </div>
+
+              {/* Right — image */}
+              <div className="modal-right">
+                <div style={{position:'relative',borderRadius:'0.75rem',overflow:'hidden',flex:1,minHeight:'200px',cursor:project.images.length>1?'pointer':'default',background:'rgba(2,8,24,0.6)',display:'flex',alignItems:'center',justifyContent:'center'}}
+                  onClick={() => project.images.length>1 && setIdx((idx+1)%project.images.length)}>
+                  <img key={idx} src={project.images[idx]} alt=""
+                    style={{maxWidth:'100%',maxHeight:'100%',width:'auto',height:'auto',objectFit:'contain',display:'block',transition:'opacity 0.4s ease'}}/>
+                  {project.images.length>1 && (
+                    <div style={{position:'absolute',top:0,bottom:0,right:0,width:'50px',display:'flex',alignItems:'center',justifyContent:'center',background:'linear-gradient(to right,transparent,rgba(2,8,24,0.55))'}}>
+                      <div className="glass" style={{width:'32px',height:'32px',borderRadius:'9999px',display:'flex',alignItems:'center',justifyContent:'center',color:'#e0f2fe',fontSize:'1.1rem'}}>›</div>
+                    </div>
+                  )}
+                  {project.images.length>1 && (
+                    <div className="glass" style={{position:'absolute',top:'0.6rem',left:'0.6rem',padding:'0.15rem 0.6rem',borderRadius:'0.4rem',color:'rgba(224,242,254,0.6)',fontSize:'0.6rem',fontFamily:'"DM Sans",sans-serif'}}>
+                      {idx+1} / {project.images.length} · click →
+                    </div>
+                  )}
+                  {project.images.length>1 && (
+                    <div style={{position:'absolute',bottom:'0.6rem',left:0,right:0,display:'flex',justifyContent:'center',gap:'5px'}}>
+                      {project.images.map((_,i) => (
+                        <div key={i} className="dot" onClick={e=>{e.stopPropagation();setIdx(i);}}
+                          style={{height:'5px',borderRadius:'3px',cursor:'pointer',width:i===idx?'18px':'5px',background:i===idx?'rgba(56,189,248,0.9)':'rgba(56,189,248,0.3)'}}/>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                {project.images.length>1 && (
+                  <div style={{display:'flex',gap:'0.4rem',flexShrink:0}}>
+                    {project.images.map((img,i) => (
+                      <div key={i} onClick={()=>setIdx(i)} style={{flex:1,height:'56px',borderRadius:'0.6rem',overflow:'hidden',cursor:'pointer',border:i===idx?'2px solid rgba(56,189,248,0.7)':'2px solid rgba(56,189,248,0.15)',opacity:i===idx?1:0.45,transition:'all 0.3s',background:'rgba(2,8,24,0.6)',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                        <img src={img} alt="" style={{maxWidth:'100%',maxHeight:'100%',objectFit:'contain'}}/>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    function Projects() {
+      const [active, setActive] = useState(null);
+      return (
+        <section id="projects" className="section-alt" style={{padding:'4rem 1.25rem'}}>
+          <div style={{maxWidth:'1280px',margin:'0 auto'}}>
+            <div className="scroll-reveal" style={{marginBottom:'2.5rem'}}>
+              <p style={{color:'#38bdf8',fontFamily:'"DM Sans",sans-serif',fontSize:'0.7rem',textTransform:'uppercase',letterSpacing:'0.3em',marginBottom:'0.6rem'}}>Selected Work</p>
+              <h2 style={{fontFamily:'"Cormorant Garamond",serif',color:'#e0f2fe',fontSize:'clamp(2rem,5vw,3rem)',fontWeight:300,marginBottom:'0.75rem'}}>Projects</h2>
+              <div className="glow-line" style={{width:'8rem'}}/>
+            </div>
+            <div className="projects-grid">
+              {PROJECTS.map((p,i) => (
+                <div key={p.id} className="scroll-reveal" style={{transitionDelay:`${i*0.07}s`}}>
+                  <ProjectCard project={p} onClick={setActive}/>
+                </div>
+              ))}
+            </div>
+          </div>
+          <ProjectModal project={active} onClose={() => setActive(null)}/>
+        </section>
+      );
+    }
+
+    /* ═══════════════════════════════════════
+       CREDENTIALS
+    ═══════════════════════════════════════ */
+    const CREDENTIALS = [
+      { id:1, title:'Network Support and Security', issuer:'Cisco', year:'2025', type:'Certification',
+        image:'assets/cred3.png', pdf:'assets/_certificate_mashaelleminton-gmail-com_680f9517-3f1c-42b1-ad7b-9da4ea11218f.pdf' },
+      { id:2, title:'Networking Basics', issuer:'Cisco', year:'2025', type:'Certification',
+        image:'assets/cred2.png', pdf:'assets/_certificate_mashaelleminton-gmail-com_0e21975c-c4d9-4c29-8396-72f1f6905969.pdf' },
+      { id:3, title:'Networking Devices and Initial Configuration', issuer:'Cisco', year:'2025', type:'Certification',
+        image:'assets/cred1.png', pdf:'assets/_certificate_mashaelleminton-gmail-com_2e602b35-46e2-4b03-b568-4970cca39b9d.pdf' },
+      { id:4, title:'Network Addressing and Basic Troubleshooting', issuer:'Cisco', year:'2025', type:'Certification',
+        image:'assets/cred.png', pdf:'assets/_certificate_mashaelleminton-gmail-com_61abdee9-c328-45b9-a02d-b49aa5a4df26.pdf' },
+    ];
+
+    function CredCard({ cred, onClick }) {
+      return (
+        <div className="cred-card glass" onClick={() => onClick(cred)}
+          style={{borderRadius:'1rem',overflow:'hidden',cursor:'pointer',border:'1px solid rgba(56,189,248,0.15)'}}>
+          <div style={{position:'relative',height:'160px',overflow:'hidden'}}>
+            <img src={cred.image} alt={cred.title} className="img-zoom"
+              style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
+            <div className="cred-overlay" style={{position:'absolute',inset:0,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',background:'rgba(2,8,24,0.72)',backdropFilter:'blur(4px)'}}>
+              <div className="glass" style={{color:'#e0f2fe',fontSize:'0.75rem',fontFamily:'"DM Sans",sans-serif',padding:'0.45rem 1.1rem',borderRadius:'0.65rem',marginBottom:'0.35rem'}}>🔍 View Certificate</div>
+              <p style={{color:'rgba(224,242,254,0.5)',fontSize:'0.62rem',fontFamily:'"DM Sans",sans-serif'}}>Click to expand</p>
+            </div>
+            <div style={{position:'absolute',top:'0.6rem',left:'0.6rem'}}>
+              <span style={{background:'rgba(14,165,233,0.12)',borderColor:'rgba(56,189,248,0.25)',color:'#38bdf8',border:'1px solid',fontSize:'0.6rem',fontFamily:'"DM Sans",sans-serif',textTransform:'uppercase',letterSpacing:'0.1em',padding:'0.15rem 0.55rem',borderRadius:'9999px',backdropFilter:'blur(8px)'}}>{cred.type}</span>
+            </div>
+          </div>
+          <div style={{padding:'0.875rem 1rem'}}>
+            <p style={{color:'#38bdf8',fontSize:'0.6rem',fontFamily:'"DM Sans",sans-serif',textTransform:'uppercase',letterSpacing:'0.15em',marginBottom:'0.2rem'}}>{cred.issuer}</p>
+            <h3 style={{fontFamily:'"Cormorant Garamond",serif',color:'#e0f2fe',fontSize:'1.1rem',fontWeight:300,lineHeight:1.3,marginBottom:'0.3rem'}}>{cred.title}</h3>
+            <p style={{color:'rgba(224,242,254,0.35)',fontSize:'0.65rem',fontFamily:'"DM Sans",sans-serif'}}>{cred.year}</p>
+          </div>
+        </div>
+      );
+    }
+
+    function CredLightbox({ cred, onClose }) {
+      if (!cred) return null;
+      return (
+        <div className="modal-bg" style={{position:'fixed',inset:0,zIndex:50,display:'flex',alignItems:'center',justifyContent:'center',padding:'0.75rem',overflowY:'auto'}}
+          onClick={onClose}>
+          <div className="glass" style={{
+            borderRadius:'1.25rem',
+            width:'100%',maxWidth:'580px',
+            maxHeight:'90vh',
+            overflow:'hidden',
+            border:'1px solid rgba(56,189,248,0.25)',
+            display:'flex',flexDirection:'column',
+          }} onClick={e => e.stopPropagation()}>
+            {/* Image area */}
+            <div style={{flex:'0 0 auto',minHeight:'220px',maxHeight:'55vh',position:'relative',background:'rgba(2,8,24,0.7)',display:'flex',alignItems:'center',justifyContent:'center',overflow:'hidden'}}>
+              <img src={cred.image} alt={cred.title}
+                style={{maxWidth:'100%',maxHeight:'55vh',width:'auto',height:'auto',objectFit:'contain',display:'block'}}/>
+              <button className="glass-btn" onClick={onClose}
+                style={{position:'absolute',top:'0.75rem',right:'0.75rem',width:'32px',height:'32px',borderRadius:'9999px',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'0.75rem'}}>
+                ✕
+              </button>
+            </div>
+            {/* Info panel */}
+            <div style={{padding:'1.1rem 1.5rem 1.4rem',borderTop:'1px solid rgba(56,189,248,0.1)',flexShrink:0}}>
+              <span style={{display:'inline-block',fontSize:'0.6rem',fontFamily:'"DM Sans",sans-serif',textTransform:'uppercase',letterSpacing:'0.12em',padding:'0.15rem 0.65rem',borderRadius:'9999px',color:'#38bdf8',background:'rgba(14,165,233,0.12)',border:'1px solid rgba(56,189,248,0.3)',marginBottom:'0.5rem'}}>{cred.type}</span>
+              <h2 style={{fontFamily:'"Cormorant Garamond",serif',color:'#e0f2fe',fontSize:'clamp(1.2rem,4vw,1.6rem)',fontWeight:300,marginBottom:'0.2rem',lineHeight:1.2}}>{cred.title}</h2>
+              <p style={{color:'#38bdf8',fontFamily:'"DM Sans",sans-serif',fontSize:'0.78rem',marginBottom:'0.15rem'}}>{cred.issuer}</p>
+              <p style={{color:'rgba(224,242,254,0.35)',fontSize:'0.7rem',fontFamily:'"DM Sans",sans-serif',marginBottom:'1rem'}}>{cred.year}</p>
+              <div style={{display:'flex',gap:'0.6rem',flexWrap:'wrap'}}>
+                <a href={cred.pdf} target="_blank" rel="noreferrer" className="glass-btn"
+                  style={{fontSize:'0.75rem',fontFamily:'"DM Sans",sans-serif',padding:'0.5rem 1.1rem',borderRadius:'0.65rem',textDecoration:'none',display:'inline-flex',alignItems:'center',gap:'0.35rem',color:'#38bdf8',borderColor:'rgba(56,189,248,0.45)'}}>
+                  🔍 View Certificate
+                </a>
+                <button className="glass-btn" onClick={onClose}
+                  style={{fontSize:'0.75rem',fontFamily:'"DM Sans",sans-serif',padding:'0.5rem 1.1rem',borderRadius:'0.65rem',color:'rgba(224,242,254,0.5)'}}>
+                  Close ✕
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    function Credentials() {
+      const [sel, setSel] = useState(null);
+      return (
+        <section id="credentials" className="mesh-bg" style={{padding:'4rem 1.25rem'}}>
+          <div style={{maxWidth:'1280px',margin:'0 auto'}}>
+            <div className="scroll-reveal" style={{marginBottom:'2.5rem'}}>
+              <p style={{color:'#38bdf8',fontFamily:'"DM Sans",sans-serif',fontSize:'0.7rem',textTransform:'uppercase',letterSpacing:'0.3em',marginBottom:'0.6rem'}}>Qualifications</p>
+              <h2 style={{fontFamily:'"Cormorant Garamond",serif',color:'#e0f2fe',fontSize:'clamp(2rem,5vw,3rem)',fontWeight:300,marginBottom:'0.75rem'}}>Credentials</h2>
+              <div className="glow-line" style={{width:'8rem',marginBottom:'0.75rem'}}/>
+              <p style={{color:'rgba(224,242,254,0.45)',fontFamily:'"DM Sans",sans-serif',fontSize:'0.85rem',maxWidth:'360px'}}>
+                Click any card to view the full certificate.
+              </p>
+            </div>
+            <div className="creds-grid">
+              {CREDENTIALS.map((c,i) => (
+                <div key={c.id} className="scroll-reveal" style={{transitionDelay:`${i*0.1}s`}}>
+                  <CredCard cred={c} onClick={setSel}/>
+                </div>
+              ))}
+            </div>
+          </div>
+          <CredLightbox cred={sel} onClose={() => setSel(null)}/>
+        </section>
+      );
+    }
+
+    /* ═══════════════════════════════════════
+       CONTACT
+    ═══════════════════════════════════════ */
+    function Contact() {
+      const contacts = [
+        { icon:'✉', label:'Email', value:'mashaelleminton@email.com', href:'mailto:mashaelleminton@email.com' },
+        { icon:'🔗', label:'LinkedIn', value:'linkedin.com/in/edainne-mashaelle-minton', href:'https://www.linkedin.com/in/edainne-mashaelle-minton-ab6106412/' },
+        { icon:'🐙', label:'GitHub', value:'github.com/mashelll1', href:'https://github.com/mashelll1' },
+        { icon:'📞', label:'Phone', value:'+63 946 885 9741', href:'tel:+639468859741' },
+        { icon:'📍', label:'Location', value:'Valenzuela City, Philippines', href:null },
+      ];
+      return (
+        <section id="contact" className="section-alt" style={{padding:'4rem 1.25rem'}}>
+          <div style={{maxWidth:'1280px',margin:'0 auto'}}>
+            <div className="scroll-reveal" style={{marginBottom:'2.5rem'}}>
+              <p style={{color:'#38bdf8',fontFamily:'"DM Sans",sans-serif',fontSize:'0.7rem',textTransform:'uppercase',letterSpacing:'0.3em',marginBottom:'0.6rem'}}>Get In Touch</p>
+              <h2 style={{fontFamily:'"Cormorant Garamond",serif',color:'#e0f2fe',fontSize:'clamp(2rem,5vw,3rem)',fontWeight:300,marginBottom:'0.75rem'}}>Contact</h2>
+              <div className="glow-line" style={{width:'8rem'}}/>
+            </div>
+
+            <div style={{display:'grid',gap:'2.5rem'}} className="contact-grid">
+              <style>{`
+                .contact-grid{grid-template-columns:1fr;}
+                @media(min-width:768px){.contact-grid{grid-template-columns:1fr 1fr;align-items:start;}}
+              `}</style>
+
+              {/* Left — tagline + form */}
+              <div className="scroll-reveal">
+                <p style={{fontFamily:'"Cormorant Garamond",serif',color:'rgba(224,242,254,0.65)',fontSize:'clamp(1.1rem,3vw,1.4rem)',fontStyle:'italic',lineHeight:1.6,marginBottom:'1rem',maxWidth:'380px'}}>
+                  "Let's build something beautiful together."
+                </p>
+                <p style={{fontFamily:'"DM Sans",sans-serif',color:'rgba(224,242,254,0.45)',fontSize:'0.85rem',lineHeight:1.75,marginBottom:'2rem',maxWidth:'380px'}}>
+                  Thank you for taking the time to explore my portfolio. If you'd like to collaborate, discuss opportunities, or simply connect, feel free to reach out.
+                </p>
+                <div className="glass" style={{borderRadius:'1rem',padding:'1.25rem',display:'flex',flexDirection:'column',gap:'0.75rem'}}>
+                  <p style={{fontFamily:'"Cormorant Garamond",serif',color:'#e0f2fe',fontSize:'1.3rem',fontWeight:300,marginBottom:'0.1rem'}}>Send a Message</p>
+                  <input type="text" placeholder="Your Name" style={{background:'transparent',border:'1px solid rgba(56,189,248,0.2)',borderRadius:'0.65rem',padding:'0.65rem 0.9rem',color:'#e0f2fe',fontFamily:'"DM Sans",sans-serif',fontSize:'0.85rem',width:'100%'}}/>
+                  <input type="email" placeholder="Your Email" style={{background:'transparent',border:'1px solid rgba(56,189,248,0.2)',borderRadius:'0.65rem',padding:'0.65rem 0.9rem',color:'#e0f2fe',fontFamily:'"DM Sans",sans-serif',fontSize:'0.85rem',width:'100%'}}/>
+                  <textarea placeholder="Your Message..." rows={4} style={{background:'transparent',border:'1px solid rgba(56,189,248,0.2)',borderRadius:'0.65rem',padding:'0.65rem 0.9rem',color:'#e0f2fe',fontFamily:'"DM Sans",sans-serif',fontSize:'0.85rem',width:'100%',resize:'none'}}/>
+                  <button className="glass-btn" style={{alignSelf:'flex-start',fontSize:'0.75rem',fontFamily:'"DM Sans",sans-serif',fontWeight:500,textTransform:'uppercase',letterSpacing:'0.12em',padding:'0.6rem 1.3rem',borderRadius:'0.65rem',color:'#38bdf8',background:'rgba(14,165,233,0.15)',borderColor:'rgba(56,189,248,0.4)'}}>
+                    Send Message →
+                  </button>
+                </div>
+              </div>
+
+              {/* Right — contact cards */}
+              <div className="scroll-reveal contact-cards" style={{transitionDelay:'0.2s'}}>
+                {contacts.map(c => {
+                  const inner = (
+                    <div style={{display:'flex',alignItems:'flex-start',gap:'0.75rem'}}>
+                      <span style={{fontSize:'1.2rem',flexShrink:0}}>{c.icon}</span>
+                      <div style={{minWidth:0}}>
+                        <p style={{color:'#38bdf8',fontSize:'0.6rem',fontFamily:'"DM Sans",sans-serif',textTransform:'uppercase',letterSpacing:'0.15em',marginBottom:'0.15rem'}}>{c.label}</p>
+                        <p style={{color:'rgba(224,242,254,0.65)',fontSize:'0.75rem',fontFamily:'"DM Sans",sans-serif',lineHeight:1.4,wordBreak:'break-word'}}>{c.value}</p>
+                      </div>
+                    </div>
+                  );
+                  const style = {border:'1px solid rgba(56,189,248,0.15)',borderRadius:'0.875rem',padding:'0.875rem',display:'block',transition:'border-color 0.3s',textDecoration:'none'};
+                  return c.href ? (
+                    <a key={c.label} href={c.href} target={c.href.startsWith('http')?'_blank':undefined} rel="noreferrer"
+                      className="glass" style={style}>{inner}</a>
+                  ) : (
+                    <div key={c.label} className="glass" style={style}>{inner}</div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    /* ═══════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════ */
+    function Footer() {
+      return (
+        <footer className="mesh-bg" style={{padding:'2rem 1.25rem',borderTop:'1px solid rgba(56,189,248,0.08)'}}>
+          <div style={{maxWidth:'1280px',margin:'0 auto',display:'flex',flexWrap:'wrap',alignItems:'center',justifyContent:'space-between',gap:'1rem'}}>
+            <div>
+              <p style={{fontFamily:'"Cormorant Garamond",serif',color:'rgba(224,242,254,0.5)',fontSize:'0.85rem'}}>Edainne Mashaelle Minton</p>
+              <p style={{color:'rgba(224,242,254,0.25)',fontSize:'0.68rem',fontFamily:'"DM Sans",sans-serif',marginTop:'2px'}}>© {new Date().getFullYear()} — All rights reserved</p>
+            </div>
+            <div style={{display:'flex',alignItems:'center',gap:'0.75rem',flexWrap:'wrap'}}>
+              <button className="glass-btn" onClick={() => window.open('assets/minton_cv.pdf','_blank')}
+                style={{fontSize:'0.7rem',fontFamily:'"DM Sans",sans-serif',fontWeight:500,textTransform:'uppercase',letterSpacing:'0.12em',padding:'0.5rem 1.1rem',borderRadius:'9999px',color:'#38bdf8',background:'rgba(14,165,233,0.12)',borderColor:'rgba(56,189,248,0.3)'}}>
+                ↓ Download CV
+              </button>
+              <span style={{color:'rgba(224,242,254,0.2)',fontSize:'0.68rem',fontFamily:'"DM Sans",sans-serif'}}>Let's go!</span>
+            </div>
+          </div>
+        </footer>
+      );
+    }
+
+    /* ═══════════════════════════════════════
+       APP ROOT
+    ═══════════════════════════════════════ */
+    function App() {
+      const [darkMode, setDarkMode] = useState(true);
+
+      useEffect(() => {
+        if (darkMode) {
+          document.body.classList.remove('light-mode');
+        } else {
+          document.body.classList.add('light-mode');
+        }
+      }, [darkMode]);
+
+      const toggleDark = () => setDarkMode(d => !d);
+
+      useEffect(() => {
+        const obs = new IntersectionObserver(
+          entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
+          { threshold: 0.08 }
+        );
+        document.querySelectorAll('.scroll-reveal').forEach(el => obs.observe(el));
+        return () => obs.disconnect();
+      }, []);
+      return (
+        <div>
+          <Header darkMode={darkMode} toggleDark={toggleDark}/>
+          <main>
+            <About/>
+            <Projects/>
+            <Credentials/>
+            <Contact/>
+          </main>
+          <Footer/>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+  </script>
+</body>
+</html>
